@@ -20,12 +20,63 @@ class _SlotsState extends State<Slots> {
               itemCount: widget.slots.length,
               itemBuilder: (context, index) {
                 return Container(
-                  margin: EdgeInsets.all(10),
-                  height: 200,
-                  child: Column(
-                    children: [],
-                  ),
-                );
+                    margin: EdgeInsets.all(10),
+                    height: 200,
+                    child: Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.slots[index]['name'],
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            widget.slots[index]['address'],
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                widget.slots[index]['vaccine'],
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Text(
+                                widget.slots[index]['fee_type'],
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          ),
+                          Divider(),
+                          Text(
+                            'From:' +
+                                widget.slots[index]['from'].toString() +
+                                "             To:" +
+                                widget.slots[index]['to'].toString(),
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Age Limit :' +
+                                    widget.slots[index]['min_age_limit']
+                                        .toString(),
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              Text(
+                                widget.slots[index]['available_capacity']
+                                    .toString(),
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ));
               })),
     );
   }

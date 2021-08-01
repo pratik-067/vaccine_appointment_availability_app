@@ -25,11 +25,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  //--------------------------------------------
+//----------------------------------------------------
   TextEditingController pincodeController = TextEditingController();
   TextEditingController dayController = TextEditingController();
   List slot = [];
-//---------------------------------------------------
+//----------------------------------------------------
   feachSlot() async {
     print(dayController.text);
     await http
@@ -41,11 +41,11 @@ class _HomeState extends State<Home> {
         .then((value) {
       Map result = jsonDecode(value.body);
       setState(() {
-        slot = result['sessions'];
+        slot.addAll(result['sessions']);
       });
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Slots(slots: slot)));
-      print(result);
+      print(result['error']);
+
+      // print(result['sessions'][1]['name']);
     });
   }
 
@@ -90,9 +90,18 @@ class _HomeState extends State<Home> {
                 width: 350,
                 height: 45,
                 child: ElevatedButton(
-                  child: Text('Find Slots'),
+                  child: Text('Search'),
                   onPressed: () {
-                    feachSlot();
+                    if (slot.isEmpty) {
+                      feachSlot();
+                      print('no');
+                      _showMyDialog(context);
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Slots(slots: slot)));
+                    }
                   },
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
@@ -103,6 +112,18 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showMyDialog(BuildContext context) async {
+    var alert = AlertDialog(
+        title: const Text('NO Slot avilabe'),
+        content: Text('vaccine is not avilablein your area'));
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
