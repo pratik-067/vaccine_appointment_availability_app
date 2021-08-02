@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:vaccine_slot_vacancy_app/slots.dart';
 
@@ -43,7 +44,6 @@ class _HomeState extends State<Home> {
       setState(() {
         slot.addAll(result['sessions']);
       });
-      print(result['error']);
 
       // print(result['sessions'][1]['name']);
     });
@@ -79,8 +79,20 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.all(20),
                 child: TextField(
                   controller: dayController,
-                  decoration: InputDecoration(hintText: "Enter Date"),
-                  keyboardType: TextInputType.datetime,
+                  decoration: InputDecoration(
+                    hintText: "Enter Date",
+                  ),
+                  onTap: () async {
+                    var date = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime(2100));
+
+                    dayController.text = DateFormat("dd-MM-yyyy hh:mm:ss")
+                        .format(date)
+                        .substring(0, 10);
+                  },
                 ),
               ),
               SizedBox(
@@ -92,9 +104,8 @@ class _HomeState extends State<Home> {
                 child: ElevatedButton(
                   child: Text('Search'),
                   onPressed: () {
+                    feachSlot();
                     if (slot.isEmpty) {
-                      feachSlot();
-                      print('no');
                       _showMyDialog(context);
                     } else {
                       Navigator.push(
