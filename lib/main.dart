@@ -32,7 +32,6 @@ class _HomeState extends State<Home> {
   List slot = [];
 //----------------------------------------------------
   feachSlot() async {
-    print(dayController.text);
     await http
         .get(Uri.parse(
             'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=' +
@@ -41,10 +40,16 @@ class _HomeState extends State<Home> {
                 dayController.text))
         .then((value) {
       Map result = jsonDecode(value.body);
-      setState(() {
-        slot.addAll(result['sessions']);
-      });
 
+      setState(() {
+        slot = result['sessions'];
+      });
+      if (slot.isEmpty) {
+        _showMyDialog(context);
+      } else {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => Slots(slots: slot)));
+      }
       // print(result['sessions'][1]['name']);
     });
   }
@@ -105,14 +110,6 @@ class _HomeState extends State<Home> {
                   child: Text('Search'),
                   onPressed: () {
                     feachSlot();
-                    if (slot.isEmpty) {
-                      _showMyDialog(context);
-                    } else {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Slots(slots: slot)));
-                    }
                   },
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
